@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Like from "./common/Like";
+import Pagination from "./common/Pagination";
 
-class Movie extends Component {
+class Movies extends Component {
   render() {
     return (
       <div>
@@ -17,7 +18,7 @@ class Movie extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.movies.map((movie, index) => (
+            {this.props.newMovies.map((movie, index) => (
               <tr key={movie.id}>
                 <td>{movie.title}</td>
                 <td>{movie.genre}</td>
@@ -41,9 +42,15 @@ class Movie extends Component {
             ))}
           </tbody>
         </table>
+        <Pagination
+          itemsCount={this.props.movies.length}
+          pageSize={this.props.pageSize}
+          onPageChange={this.props.pageChange}
+          currentPage={this.props.currentPage}
+        />
       </div>
     );
   }
 }
 
-export default Movie;
+export default Movies;
