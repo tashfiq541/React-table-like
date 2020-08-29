@@ -10,7 +10,7 @@ class App extends Component {
       {
         id: "m01",
         title: "Terminator",
-        genre: "Action",
+        genre: { name: "Action", id: "g01" },
         stock: 6,
         rate: 2.5,
         liked: false,
@@ -18,7 +18,7 @@ class App extends Component {
       {
         id: "m02",
         title: "Die Hard",
-        genre: "Action",
+        genre: { name: "Action", id: "g01" },
         stock: 5,
         rate: 2.5,
         liked: false,
@@ -26,7 +26,7 @@ class App extends Component {
       {
         id: "m03",
         title: "Get Out",
-        genre: "Thriller",
+        genre: { id: "g03", name: "Thriller" },
         stock: 8,
         rate: 3.5,
         liked: false,
@@ -34,7 +34,7 @@ class App extends Component {
       {
         id: "m04",
         title: "Trip to Italy",
-        genre: "Comedy",
+        genre: { id: "g02", name: "Comedy" },
         stock: 7,
         rate: 3.5,
         liked: false,
@@ -42,7 +42,7 @@ class App extends Component {
       {
         id: "m05",
         title: "Airplane",
-        genre: "Comedy",
+        genre: { id: "g02", name: "Comedy" },
         stock: 7,
         rate: 3.5,
         liked: false,
@@ -50,7 +50,7 @@ class App extends Component {
       {
         id: "m06",
         title: "Wedding Crashers",
-        genre: "Comedy",
+        genre: { id: "g02", name: "Comedy" },
         stock: 7,
         rate: 3.5,
         liked: false,
@@ -58,7 +58,7 @@ class App extends Component {
       {
         id: "m07",
         title: "Gone Girl",
-        genre: "Thriller",
+        genre: { id: "g03", name: "Thriller" },
         stock: 7,
         rate: 4.5,
         liked: false,
@@ -66,7 +66,7 @@ class App extends Component {
       {
         id: "m08",
         title: "The Sixth Secnse",
-        genre: "Thriller",
+        genre: { id: "g03", name: "Thriller" },
         stock: 4,
         rate: 3.5,
         liked: false,
@@ -74,7 +74,7 @@ class App extends Component {
       {
         id: "m09",
         title: "the Avengers",
-        genre: "Action",
+        genre: { name: "Action", id: "g01" },
         stock: 7,
         rate: 3.5,
         liked: false,
@@ -86,7 +86,8 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.setState({ genres: getGenres() });
+    const genres = [{ name: "All Genres" }, ...getGenres()];
+    this.setState({ genres });
   }
 
   movieDeleteHandler = (movieIndex) => {
@@ -111,15 +112,20 @@ class App extends Component {
   };
 
   handleGenreSelect = (genre) => {
-    this.setState({ selectedGenre: genre });
+    this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
   render() {
     if (this.state.movies.length === 0)
       return <p className="container">There are no movies in database</p>;
-
+    const filtered =
+      this.state.selectedGenre && this.state.selectedGenre.id
+        ? this.state.movies.filter(
+            (m) => m.genre.id === this.state.selectedGenre.id
+          )
+        : this.state.movies;
     const newMovies = paginate(
-      this.state.movies,
+      filtered,
       this.state.currentPage,
       this.state.pageSize
     );
@@ -135,9 +141,9 @@ class App extends Component {
             />
           </div>
           <div className="col-md-9">
-            <p>There are {this.state.movies.length} movies in database</p>
+            <p>There are {filtered.length} movies in database</p>
             <Movies
-              movies={this.state.movies}
+              movies={filtered}
               movieDelete={this.movieDeleteHandler}
               movieLiked={this.likeHandler}
               pageSize={this.state.pageSize}

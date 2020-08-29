@@ -21,7 +21,7 @@ class Movies extends Component {
             {this.props.newMovies.map((movie, index) => (
               <tr key={movie.id}>
                 <td>{movie.title}</td>
-                <td>{movie.genre}</td>
+                <td>{movie.genre.name}</td>
                 <td>{movie.stock}</td>
                 <td>{movie.rate}</td>
                 <td>
